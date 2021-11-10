@@ -15,6 +15,7 @@ def add_noise(img: np.ndarray)->np.ndarray:
     """
     Args: img: input image 
     Return: noisy image
+    thanhBear
     """
     out = img + np.random.standard_normal()
     out[out<0]=0
@@ -30,7 +31,6 @@ def denoise_separated(img, kernel):
 
 def denoise_torch(img: np.ndarray, filter: np.ndarray)->np.ndarray:
     gaussian_tensor = torch.tensor(filter, dtype=torch.float32).reshape(1,1,3,3)
-
     input_tensor = torch_preprocess(img)
     
     [red_tensor, green_tensor, blue_tensor] = torch.split(input_tensor, split_size_or_sections=[1,1,1], dim=1)
