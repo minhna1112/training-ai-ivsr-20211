@@ -16,3 +16,6 @@ def torch_preprocess(img: np.ndarray)->torch.Tensor:
 
 def torch_postprocess(tensor: torch.Tensor)->np.ndarray:
     return torch.squeeze(tensor, dim=0).permute(dims=[1,2,0]).detach().numpy()
+
+
+
