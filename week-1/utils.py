@@ -29,3 +29,12 @@ def torch_preprocess(img: np.ndarray)->torch.Tensor:
 def post_process(result: torch.Tensor)->np.ndarray:
     out = result.numpy().squeeze().transpose((1,2,0))
     return out
+
+def preprocess_image(image: np.ndarray)->np.ndarray:
+    """
+    Args: image: input image to be preprocessed
+    return: out: preprocessed image
+    """
+    out = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    out =  out / 255.0
+    return out
