@@ -1,4 +1,5 @@
 import torch
+import numpy as np
 
 class GaussianConvolutionLayer(torch.nn.Module):
     def __init__(self, weights_array: np.ndarray):
