@@ -24,11 +24,11 @@ class LaplacianConvolutionalLayer(torch.nn.Module):
         super(LaplacianConvolutionalLayer, self).__init__()
         ##### YOUR CODE HERE #####
         # Initialize a Laplacian tensor (type: torch.Tensor) using filter matrix pre-defined in Figure 3.39 d, page 129, Gonzalez book
-        self.laplacian_kernel = torch.tensor(np.array([-1,-1,-1,-1,8,-1,-1,-1,-1]).reshape([1,1,3,3]), dtype=torch.float32).repeat(3,1,1,1)
+        self.laplacian_kernel = ???
         ##### END OF YOUR CODE #####
     def forward(self, x):
         #### YOUR CODE HERE
         #Perform forward pass using F.conv2d, you can perform convolution on each color channel separatedly, or try using "groups" parameters.
-        out =  F.conv2d(x, self.laplacian_kernel, groups=3, padding=1)
+        out =  ???
         #####
         return out
