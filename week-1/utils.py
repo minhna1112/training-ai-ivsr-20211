@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-
+import cv2
 import torch
 
 def plot_hist(img: np.ndarray, fig_num:int)->None:
