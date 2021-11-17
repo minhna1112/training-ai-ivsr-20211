@@ -6,7 +6,8 @@ from utils import *
 
 from layers import GaussianConvolutionLayer, LaplacianConvolutionalLayer 
 
-GAUSSIAN_KERNEL = 1/9 * np.ones((3,3))
+GAUSSIAN_KERNEL = 1/9 * np.ones((3, 3))
+LAPLACIAN_KERNEL = np.array([-1, -1, -1, -1, 8, -1, -1, -1, -1]).reshape(3, 3)
 plt.ion()
 
 class EdgeExtractor(torch.nn.Module):
@@ -19,7 +20,7 @@ class EdgeExtractor(torch.nn.Module):
         """
         super().__init__()
         self.smoothing_layer = GaussianConvolutionLayer(GAUSSIAN_KERNEL)
-        self.laplacian_layer = LaplacianConvolutionalLayer()
+        self.laplacian_layer = LaplacianConvolutionalLayer(LAPLACIAN_KERNEL)
 
     def forward(self, x):
         """
@@ -32,13 +33,13 @@ class EdgeExtractor(torch.nn.Module):
         out = self.smoothing_layer(x)
         out = self.laplacian_layer(out)
         out = out.clamp(min=0)
-        out[out>0.1] = 1
-        out[out <0.1] = 0 
+        out[out > 0.1] = 1
+        out[out < 0.1] = 0
 
         return out
 
 if __name__=="__main__":
-    bears = cv2.imread('./bears.jpg')
+    bears = cv2.imread('bears.jpg')
     plt.figure(0)
     plt.title('Original Image')
     plt.imshow(bears, vmax=255)
@@ -56,7 +57,7 @@ if __name__=="__main__":
     plt.figure(1)
     plt.title('Extracted edges')
     for i in range(3):
-        plt.subplot(1,3, i+1)
+        plt.subplot(1, 3, i+1)
         plt.imshow(edges_im[:, :, 2], vmax=1.0, cmap='gray')
     plt.show(block=False)
     plt.pause(5)
