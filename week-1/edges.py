@@ -2,7 +2,7 @@ import torch
 import numpy as np
 import matplotlib.pyplot as plt
 import cv2
-import scipy.ndimage as nd
+
 from utils import *
 
 from layers import GaussianConvolutionLayer, LaplacianConvolutionalLayer 
@@ -44,7 +44,7 @@ if __name__=="__main__":
     plt.imshow(bears, vmax=255)
 
     #Preprocess image to feed into the edge extractor
-    input_tensor = torch_preprocess(preprocess_image(bear_input))
+    input_tensor = torch_preprocess(preprocess_image(bears))
     #Call an instance of the edge extractor
     edge_extractor = EdgeExtractor()
     #Perform forward pass

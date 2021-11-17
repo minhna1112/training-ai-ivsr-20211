@@ -1,5 +1,6 @@
 import torch
 import numpy as np
+import torch.nn.functional as F
 
 class GaussianConvolutionLayer(torch.nn.Module):
     def __init__(self, weights_array: np.ndarray):
@@ -24,6 +25,4 @@ class LaplacianConvolutionalLayer(torch.nn.Module):
     def forward(self, x):
         out = F.conv2d(x, self.laplacian_kernel, groups=3, padding=1)
         out = out.clamp(min=0)
-        out[out>0.1] = 1
-        out[out <0.1] = 0 
         return out
