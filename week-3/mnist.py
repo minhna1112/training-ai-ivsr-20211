@@ -9,7 +9,7 @@ import time
 from PIL import Image
 from tqdm import tqdm
 from torchsummary import summary
-
+import utils
 
 class DataLoader:
     """
@@ -159,7 +159,6 @@ class HandWrittenDigitClassifier(torch.nn.Module):
 
     def create_model(self):
         self.net = ClassifierNN()
-        summary(self.net, input_size=[1,28,28])
         self.loss_fn = torch.nn.CrossEntropyLoss()
 
     def visualize_random_sample(self):
@@ -203,6 +202,8 @@ class HandWrittenDigitClassifier(torch.nn.Module):
         if self.use_gpu:
             self.net.to(self.device)
 
+        summary(self.net, input_size=(1, 28, 28))
+
         self.train_loss_history = []
         start_time = time.time()
         for epoch in range(num_epochs):
@@ -245,11 +246,24 @@ class HandWrittenDigitClassifier(torch.nn.Module):
 
         y_hat = self.net(x)
 
+        for i, input_tensor in enumerate(test_features):
+            im = input_tensor.permute(1,2,0).detach().numpy()
+            out = np.argmax(y_hat[i].detach().cpu().numpy())
+            plt.subplot(4,4, i+1)
+            plt.imshow(im, vmax=1.0)
+            plt.title(f'{out}')
+
+        plt.show()
+        plt.pause(100)
+
+
 
 
 classifier = HandWrittenDigitClassifier()
 classifier.make_data()
 classifier.create_dataloader()
-classifier.create_model()
-classifier.start_trainning()
-classifier.save_model()
+# classifier.create_model()
+# classifier.start_trainning()
+# classifier.save_model()
+classifier.load_model_for_inference()
+classifier.visualize_random_predictions()
