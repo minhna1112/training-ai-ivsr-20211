@@ -143,7 +143,11 @@ class Cifar10Classifier(torch.nn.Module):
         - See https://stackoverflow.com/questions/50544730/how-do-i-split-a-custom-dataset-into-training-and-test-datasets
         """
         self.train_dataset, self.test_dataset = ???
-        
+
+    def create_dataloader(self):
+        self.train_loader = Cifar10Loader(self.train_dataset, batch_size=16, shuffle=True, drop_last=False)
+        self.test_loader = Cifar10Loader(self.test_dataset, batch_size=16, shuffle=True, drop_last=False)
+        print(len(self.train_loader))
 
 
 
@@ -152,3 +156,4 @@ classifier = Cifar10Classifier()
 
 classifier.make_data()
 classifier.split_data()
+classifier.create_dataloader()
