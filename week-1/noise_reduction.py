@@ -9,7 +9,7 @@ import time
 from utils import *
 from layers import GaussianConvolutionLayer
 
-GAUSSIAN_KERNEL = 1/9 * np.ones((3,3))
+GAUSSIAN_KERNEL = 1/9 * np.ones((3, 3))
 
 def add_noise(img: np.ndarray)->np.ndarray:
     """
@@ -18,22 +18,22 @@ def add_noise(img: np.ndarray)->np.ndarray:
     thanhBear
     """
     out = img + np.random.standard_normal()
-    out[out<0]=0
-    out[out>1]=1
+    out[out < 0] = 0
+    out[out > 1] = 1
     return out
 
 def denoise_separated(img, kernel):
     bear_denoised_separated = np.zeros(shape=bear_noisy.shape)
     for i in range(3):
-        bear_denoised_separated[:, :, i] = nd.convolve(bear_noisy[:,:, i], kernel, mode='constant')
+        bear_denoised_separated[:, :, i] = nd.convolve(bear_noisy[:, :, i], kernel, mode='constant')
 
     return bear_denoised_separated
 
 def denoise_torch(img: np.ndarray, filter: np.ndarray)->np.ndarray:
-    gaussian_tensor = torch.tensor(filter, dtype=torch.float32).reshape(1,1,3,3)
+    gaussian_tensor = torch.tensor(filter, dtype=torch.float32).reshape(1, 1, 3, 3)
     input_tensor = torch_preprocess(img)
     
-    [red_tensor, green_tensor, blue_tensor] = torch.split(input_tensor, split_size_or_sections=[1,1,1], dim=1)
+    [red_tensor, green_tensor, blue_tensor] = torch.split(input_tensor, split_size_or_sections=[1, 1, 1], dim=1)
 
     red_out = F.conv2d(red_tensor, gaussian_tensor, padding=1)
     green_out = F.conv2d(green_tensor, gaussian_tensor, padding=1)
