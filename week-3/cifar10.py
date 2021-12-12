@@ -27,7 +27,7 @@ class Cifar10Dataset(Dataset):
         y = ???
         return x, y
 
-class DataLoader:
+class Cifar10Loader:
     """
     Dataloader Class
     Defines an iterable batch-sampler over a given dataset
