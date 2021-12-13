@@ -2,14 +2,22 @@ import torch
 from torch.utils.data import Dataset
 
 import numpy as np
+import os
+from path import Path
 
+label_dict = {'bird': 0, 'car': 1, 'cat': 2, 'deer': 3, 'dog': 4, 'frog': 5, 'horse': 6, 'plane': 7, 'ship': 8, 'truck': 9}
 
 class Cifar10Dataset(Dataset):
     def __init__(self, path_to_datafolder):
         """
         TODO: create a list of all image files in datafolder, save that list into "self.dataset" attributes
         """
-        self.dataset = None
+        self.dataset = {'path': [], 'labels': []}
+        for label_name in os.listdir(path_to_datafolder):
+            path_to_label_folder = path_to_datafolder / label_name
+            for file_name in os.listdir(path_to_label_folder):
+                self.dataset['path'].append(path_to_label_folder / file_name)
+                self.dataset['labels'].append(label_dict[label_name])
         pass
 
     def __len__(self):
