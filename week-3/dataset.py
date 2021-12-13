@@ -1,46 +1,29 @@
 import os
 from torch.utils.data import Dataset
 import cv2
-import numpy as np
 
-class Cifar10(Dataset):
+class Cifar10Dataset(Dataset):
     def __init__(self, path_to_folder):
-        my_dict = dict()
+        self.path_to_folder = path_to_folder
+        my_dict = {'path': [], 'label': []}
         for folder_name in os.listdir(path_to_folder):
-            img = []
             for file_name in os.listdir(os.path.join(path_to_folder, folder_name)):
-                img.append(file_name)
-            my_dict[folder_name] = img
+                my_dict['path'].append(os.path.join(path_to_folder, folder_name, file_name))
+                my_dict['label'].append(folder_name)
         self.dataset = my_dict
     def __len__(self):
-        length = 0
-        for label in self.dataset:
-            length = length + len(self.dataset[label])
-        return length
+        return len(self.dataset['path'])
 
     def __getitem__(self, index):
-        dir = 'cifar10'
-        file_path = []
-        label_int = 0
-        count = 0
-        for label in self.dataset:
-            check = False
-            for file_name in self.dataset[label]:
-                file_path.append(os.path.join(dir, label, file_name))
-                count = count + 1
-                if count == index:
-                    check = True
-                    break
-            if check:
-                break
-            label_int = label_int + 1
-        image = file_path[index - 1]
-        #image = cv2.imread(image)
-        return image, label_int
-
-path = 'cifar10'
-cf = Cifar10(path)
-print(cf.__getitem__(1))
+        # label_dict = {'bird': 0, 'car': 1, 'cat': 2, 'deer': 3, 'dog': 4, 'frog': 5, 'horse': 6, 'plane': 7, 'ship': 8, 'truck': 9}
+        i = 0
+        label_dict = {}
+        for folder_name in os.listdir(self.path_to_folder):
+            label_dict[folder_name] = i
+            i = i + 1
+        x = self.dataset['path'][index]
+        y = label_dict[self.dataset['label'][index]]
+        return x, y
 
 
 
