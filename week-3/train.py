@@ -8,7 +8,7 @@ import numpy as np
 
 from dataset import Cifar10Dataset
 from dataloader import Cifar10Loader
-from model import VGG16
+from model import VGG16, ClassifierNN, Net
 
 class Cifar10Classifier(nn.Module):
     def __init__(self):
@@ -32,7 +32,9 @@ class Cifar10Classifier(nn.Module):
         self.test_dataloader = Cifar10Loader(self.test_dataset, batch_size=16, shuffle=True, drop_last=False)
         print('Length of Train Dataloader: ', len(self.train_dataloader))
     def create_model(self):
-        self.net = VGG16(in_channels=3, num_classes=10)
+        #self.net = VGG16(in_channels=3, num_classes=10)
+        #self.net = ClassifierNN()
+        self.net = Net()
         self.loss_fn = torch.nn.CrossEntropyLoss()
     def forward(self, x):
         return self.net(x)
@@ -43,7 +45,7 @@ class Cifar10Classifier(nn.Module):
         self.optimizer.step()
         self.optimizer.zero_grad()
         return loss.item()
-    def start_trainning(self, num_epochs=5):
+    def start_trainning(self, num_epochs=20):
         self.net.train()
         self.optimizer = torch.optim.Adam(params=self.net.parameters(), lr=1e-3)
         device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
@@ -68,11 +70,12 @@ class Cifar10Classifier(nn.Module):
         self.net = torch.load(path)
         self.net.eval()
     def visualize_random_predictions(self):
+        label_dict = {0: 'bird', 1:'car', 2:'cat', 3:'deer', 4:'dog', 5:'frog', 6:'horse', 7:'plane', 8:'ship', 9:'truck'}
         test_features, test_labels = next(iter(self.test_dataloader))
         print(f"Feature batch shape: {test_features.size()}")
         print(f"Labels batch shape: {test_labels.size()}")
-        device = torch.device('gpu' if torch.cuda.is_available() else 'cpu')
-        self.net.to(self.device)
+        device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+        self.net.to(device)
         x, y = test_features, test_labels
         x = x.to(device)
         y = y.to(device)
@@ -83,7 +86,7 @@ class Cifar10Classifier(nn.Module):
             out = np.argmax(y_hat[i].detach().cpu().numpy())
             plt.subplot(4, 4, i + 1)
             plt.imshow(im, vmax=1.0)
-            plt.title(f'{out}')
+            plt.title(f'{label_dict[out]}')
         plt.show()
         plt.pause(100)
 
@@ -93,7 +96,7 @@ if __name__ == '__main__':
     classifier.split_data(0.8)
     classifier.create_dataloader()
     classifier.create_model()
-    classifier.start_trainning()
-    classifier.save_model()
-    # classifier.load_model_for_inference()
-    # classifier.visualize_random_predictions()
+    #classifier.start_trainning()
+    #classifier.save_model('cifar10_classifier_net.pt')
+    classifier.load_model('cifar10_classifier_net.pt')
+    classifier.visualize_random_predictions()
