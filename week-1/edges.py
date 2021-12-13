@@ -2,6 +2,7 @@ import torch
 import numpy as np
 import matplotlib.pyplot as plt
 import cv2
+
 from utils import *
 
 from layers import GaussianConvolutionLayer, LaplacianConvolutionalLayer 
@@ -61,3 +62,7 @@ if __name__=="__main__":
     plt.show(block=False)
     plt.pause(5)
     plt.close()
+    plt.figure(1)
+    plt.title('Extracted Edges from Blue channel')
+    plt.imshow(post_process(edges)[:, :, 2], vmax=1.0, cmap='gray')
+   
