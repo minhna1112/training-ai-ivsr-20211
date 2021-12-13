@@ -16,7 +16,7 @@ def plot_hist(img: np.ndarray, fig_num:int)->None:
     central_bins = (red_bins[1:] + red_bins[:-1]) / 2.
 
     plt.figure(fig_num)
-    plt.title('3 color channels')
+    plt.title('3 color channels thanhBear')
     plt.plot(central_bins, blue_hist[0], label='blue')
     plt.plot(central_bins, green_hist[0], label='green')
     plt.plot(central_bins, red_hist[0], label='red')
