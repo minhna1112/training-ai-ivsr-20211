@@ -33,8 +33,8 @@ class EdgeExtractor(torch.nn.Module):
         out = self.smoothing_layer(x)
         out = self.laplacian_layer(out)
         out = out.clamp(min=0)
-        out[out>0.1] = 1
-        out[out <0.1] = 0 
+        out[????] = 1
+        out[????] = 0 
 
         return out
 
